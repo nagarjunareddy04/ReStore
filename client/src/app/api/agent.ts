@@ -8,14 +8,16 @@ const sleep = (delay: number) => {
 }
 
 axios.defaults.baseURL = "http://localhost:6004/api";
+axios.defaults.withCredentials = true;
+
 const responseBody = (response: AxiosResponse) => response.data;
 
 axios.interceptors.response.use(async response => {
     await sleep(1000);
     return response;
-}, (error: AxiosError) =>{
+}, (error: AxiosError) => {
     console.log("caught by interceptor");
-    const {data, status} = error.response!;
+    const { data, status } = error.response!;
     switch (status) {
         case 400:
             //toast.error(data.title);
@@ -53,9 +55,16 @@ const TestErrors = {
     get500Error: () => requests.get("/buggy/server-error"),
 }
 
+const Basket = {
+    get: () => requests.get('/basket'),
+    addItem: (productId: number, quantity = 1) => requests.post(`/basket?productId=${productId}&quantity=${quantity}`, {}),
+    removeItem: (productId: number, quantity = 1) => requests.delete(`/basket?productId=${productId}&quantity=${quantity}`)
+}
+
 const agent = {
     Catalog,
-    TestErrors
+    TestErrors,
+    Basket
 }
 
 export default agent;
