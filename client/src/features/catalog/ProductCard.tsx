@@ -2,6 +2,7 @@ import { ListItem, ListItemAvatar, Avatar, ListItemText, Button, Card, CardActio
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import agent from "../../app/api/agent";
+import { currencyFormat } from "../../app/api/utility/utility";
 import { useStoreContext } from "../../app/context/StoreContext";
 import { Product } from "../../app/models/product";
 
@@ -46,7 +47,7 @@ export default function ProductCard({ product }: Props) {
                 />
                 <CardContent>
                     <Typography gutterBottom color='secondary' variant="h5">
-                        ${(product.price/100).toFixed(2)}
+                        {currencyFormat(product.price)}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                         {product.brand} / {product.type}
