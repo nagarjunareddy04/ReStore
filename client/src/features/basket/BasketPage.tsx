@@ -3,28 +3,14 @@ import { Box, Button, Grid, IconButton, Paper, Table, TableBody, TableCell, Tabl
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import agent from "../../app/api/agent";
-import { useStoreContext } from "../../app/context/StoreContext";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { addBasketItemAsync, removeBasketItemAsync, setBasket } from "./basketSlice";
 import BasketSummary from "./BasketSummary";
 
 export default function BasketPage() {
-    const { basket, setBasket, removeItem } = useStoreContext();
-    const [loading, setLoading] = useState(false);
-
-    function handleAddItem(productId: number) {
-        setLoading(true);
-        agent.Basket.addItem(productId)
-            .then(basket => setBasket(basket))
-            .catch(error => console.log(error))
-            .finally(() => setLoading(false))
-    }
-
-    function handleRemoveItem(productId: number, quantity: number = 1) {
-        setLoading(true);
-        agent.Basket.removeItem(productId, quantity)
-            .then(() => removeItem(productId, quantity))
-            .catch(error => console.log(error))
-            .finally(() => setLoading(false))
-    }
+    //const { basket, setBasket, removeItem } = useStoreContext();
+    const { basket, status } = useAppSelector(state => state.basket);
+    const dispatch = useAppDispatch();
 
     if (!basket) return <Typography variant="h3">Your Basket is empty</Typography>
 
@@ -55,17 +41,17 @@ export default function BasketPage() {
                                 </TableCell>
                                 <TableCell align="right">${(item.price / 100).toFixed(2)}</TableCell>
                                 <TableCell align="center">
-                                    <IconButton color="error" onClick={() => handleRemoveItem(item.productId)}>
+                                    <IconButton color="error" onClick={() => dispatch(removeBasketItemAsync({productId: item.productId, quantity: 1}))}>
                                         <Remove />
                                     </IconButton>
                                     {item.quantity}
-                                    <IconButton color="secondary" onClick={() => handleAddItem(item.productId)}>
+                                    <IconButton color="secondary" onClick={() => dispatch(addBasketItemAsync({productId: item.productId}))}>
                                         <Add />
                                     </IconButton>
                                 </TableCell>
                                 <TableCell align="right">${((item.price * item.quantity) / 100).toFixed(2)}</TableCell>
                                 <TableCell align="right">
-                                    <IconButton color="error" onClick={() => handleRemoveItem(item.productId, item.quantity)}>
+                                    <IconButton color="error" onClick={() => dispatch(removeBasketItemAsync({productId: item.productId, quantity: item.quantity, name: 'del'}))}>
                                         <Delete />
                                     </IconButton>
                                 </TableCell>
