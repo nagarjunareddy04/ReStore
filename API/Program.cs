@@ -1,5 +1,7 @@
 using API.Data;
+using API.Entities;
 using API.Middleware;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,13 @@ builder.Services.AddDbContext<StoreContext>(opt => {
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddIdentityCore<User>(opt=>{
+    opt.User.RequireUniqueEmail = true;
+})
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<StoreContext>();
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -42,7 +51,7 @@ app.MapControllers();
 
 app.Run();
 
-void Configure(WebApplication host)
+async void Configure(WebApplication host)
 {
     using var scope = host.Services.CreateScope();
     var services = scope.ServiceProvider;
@@ -50,8 +59,9 @@ void Configure(WebApplication host)
     try
     {
         var context = services.GetRequiredService<StoreContext>();
-        context.Database.Migrate();
-        DbInitializer.Initialize(context);
+        var userManager = services.GetRequiredService<UserManager<User>>();
+        await context.Database.MigrateAsync();
+        await DbInitializer.Initialize(context, userManager);
     }
     catch (Exception ex)
     {

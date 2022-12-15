@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20221215191539_IdentityAdded")]
+    partial class IdentityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -179,15 +181,15 @@ namespace API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1c54c92b-8e95-4d14-8491-052bdbdd4aea",
-                            ConcurrencyStamp = "a33e431b-0fb9-4427-9eb4-6437a595f9cd",
+                            Id = "a5dd180a-6bdb-4dd5-8766-4a64b18b342a",
+                            ConcurrencyStamp = "5a21f8a4-5d95-40ba-89d0-f2bcc3c5f921",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "8b5aed5c-92d7-4daf-89b0-eaaefc9a1271",
-                            ConcurrencyStamp = "5cab3408-9426-4232-947e-c62b09e6522a",
+                            Id = "45386562-4442-43e1-ab54-4cc442ad5e01",
+                            ConcurrencyStamp = "61701e7d-0b1f-4514-9c36-2e8542df5b83",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
